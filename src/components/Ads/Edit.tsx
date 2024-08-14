@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { AdsContext } from '../../context/AdsContext'
 import { Ad } from '../../interfaces'
+import './ads.css'
 
 const EditAdForm: React.FC<{ ad: Ad }> = ({ ad }) => {
   const { updateAd } = useContext(AdsContext)!

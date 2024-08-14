@@ -1,14 +1,45 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, RefObject, useRef } from 'react'
 import { AdsContext } from '../../context/AdsContext'
+import { readFileAsBase64 } from '../../lib'
+import './ads.css'
+
+interface Ad {
+  address: string
+  description: string
+  location: { lat: number; lng: number }
+  images: string[]
+  phone: string
+}
 
 const AddAdForm: React.FC = () => {
   const { addAd } = useContext(AdsContext)!
-  const [ad, setAd] = useState({
+
+  const refs: {
+    [key: string]: RefObject<HTMLInputElement>
+  } = {
+    images: useRef<HTMLInputElement>(null),
+  }
+
+  const [ad, setAd] = useState<Ad>({
     address: '',
     description: '',
     location: { lat: 0, lng: 0 },
+    images: [],
     phone: '',
   })
+
+  const setSubImageFiles = async () => {
+    const imageFiles =
+      refs.images.current instanceof HTMLInputElement &&
+      refs.images.current.files
+        ? Array.from(refs.images.current.files)
+        : []
+    const base64Images = await Promise.all(imageFiles.map(readFileAsBase64))
+    setAd((prevAd) => ({
+      ...prevAd,
+      images: base64Images,
+    }))
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,6 +48,7 @@ const AddAdForm: React.FC = () => {
       address: '',
       description: '',
       location: { lat: 0, lng: 0 },
+      images: [],
       phone: '',
     })
   }
@@ -67,6 +99,12 @@ const AddAdForm: React.FC = () => {
         }
         placeholder='Longitude'
         required
+      />
+      <input
+        ref={refs.images}
+        type='file'
+        multiple
+        onChange={setSubImageFiles}
       />
       <button type='submit'>Add Ad</button>
     </form>

@@ -1,14 +1,27 @@
-import React, { useContext } from 'react'
-import { AdsContext } from '../../context/AdsContext'
+import React, { useEffect, useState, useContext } from 'react';
+import { AdsContext } from '../../context/AdsContext';
+import './ads.css';
 
 const AdList: React.FC = () => {
   const { ads, deleteAd } = useContext(AdsContext)!
 
   return (
-    <div>
+    <div className="ads-container">
       {ads.map((ad) => (
-        <div key={ad.id} className='card'>
+        <div key={ad.id} className="card">
           <h4>{ad.address}</h4>
+          <div className="images-container">
+            {ad.images?.length > 0 && (
+              ad.images?.map((img, index) => (
+                <img
+                  key={index}
+                  src={`${img}`}
+                  alt={`Ad image ${index + 1}`}
+                  className="ad-image image-slide"
+                />
+              ))
+            )}
+          </div>
           <p>{ad.description}</p>
           <p>{ad.phone}</p>
           <p>
@@ -21,4 +34,4 @@ const AdList: React.FC = () => {
   )
 }
 
-export default AdList
+export default AdList;

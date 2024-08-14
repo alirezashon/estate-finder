@@ -5,6 +5,7 @@ export interface Ad {
     lat: number
     lng: number
   }
+  images:string[] | Buffer[]
   address: string
   description: string
   phone: string
