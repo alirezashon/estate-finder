@@ -1,4 +1,3 @@
-import Map from './components/Map'
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
@@ -11,7 +10,6 @@ const App: React.FC = () => {
                 <Route path="/" element={<div >testome</div>} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/post-ad" element={<Map />} />
                 <Route path="/postad" element={<PostAd />} />
                 {/* <Route path="/ad/:id" element={<AdDetail />} /> */}
 
