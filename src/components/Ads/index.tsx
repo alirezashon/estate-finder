@@ -6,7 +6,7 @@ import AddAdForm from './Create'
 const App: React.FC = () => {
   return (
     <AdsProvider>
-      <div className='App'>
+      <div>
         <h1>Real Estate Listings</h1>
         <AddAdForm />
         <AdList />

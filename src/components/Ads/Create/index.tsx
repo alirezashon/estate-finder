@@ -2,7 +2,7 @@ import React, { useRef, useState, useContext, RefObject } from 'react'
 import { AdsContext } from '../../../context/AdsContext'
 import { readFileAsBase64 } from '../../../lib'
 import Map from '../../Map'
-import './create.css'
+import styles from './create.module.css'
 
 interface Ad {
   address: string
@@ -65,28 +65,44 @@ const AddAdForm: React.FC = () => {
     refs.description.current!.value = ''
     refs.phone.current!.value = ''
     refs.images.current!.value = ''
-    setImages([]) 
-    setCoord([35.75, 51.49]) 
+    setImages([])
+    setCoord([35.75, 51.49])
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input ref={refs.address} type='text' placeholder='Address' required />
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <input
+        ref={refs.address}
+        type='text'
+        placeholder='Address'
+        required
+        className={styles.input}
+      />
       <input
         ref={refs.description}
         type='text'
         placeholder='Description'
         required
+        className={styles.input}
       />
-      <input ref={refs.phone} type='text' placeholder='Phone' required />
+      <input
+        ref={refs.phone}
+        type='text'
+        placeholder='Phone'
+        required
+        className={styles.input}
+      />
       <Map coord={coord} setCoord={setCoord} />
       <input
         ref={refs.images}
         type='file'
         multiple
         onChange={setSubImageFiles}
+        className={styles.fileInput}
       />
-      <button type='submit'>Add Ad</button>
+      <button type='submit' className={styles.button}>
+        Add Ad
+      </button>
     </form>
   )
 }
