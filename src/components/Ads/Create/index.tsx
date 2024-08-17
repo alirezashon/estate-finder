@@ -74,34 +74,35 @@ const AddAdForm: React.FC = () => {
       <input
         ref={refs.address}
         type='text'
-        placeholder='Address'
+        placeholder='آدرس'
         required
         className={styles.input}
       />
       <input
         ref={refs.description}
         type='text'
-        placeholder='Description'
+        placeholder='توضیحات'
         required
         className={styles.input}
       />
       <input
         ref={refs.phone}
         type='text'
-        placeholder='Phone'
+        placeholder='شماره تلفن'
         required
         className={styles.input}
       />
       <Map coord={coord} setCoord={setCoord} />
       <input
         ref={refs.images}
+        placeholder='تصویر'
         type='file'
         multiple
         onChange={setSubImageFiles}
         className={styles.fileInput}
       />
       <button type='submit' className={styles.button}>
-        Add Ad
+        ایجاد{' '}
       </button>
     </form>
   )

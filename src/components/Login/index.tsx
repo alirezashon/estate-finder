@@ -1,59 +1,59 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import styles from './login.module.css';
 
-const Login: React.FC = () => {
+const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+  const [error, setError] = useState<string | null>(null)
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:5000/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+      const response = await fetch('http://localhost:5000/users', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
       })
+      const users = await response.json()
 
-      if (response.ok) {
-        const data = await response.json()
-        localStorage.setItem('authToken', data.accessToken)
-        alert('ورود با موفقیت انجام شد.')
-        navigate('/')
+      const user = users.find(
+        (user: any) => user.username === username && user.password === password
+      )
+
+      if (!user) {
+        if (users.find((user: any) => user.username === username)) {
+          setError('رمز عبور اشتباه است')
+        } else {
+          setError('نام کاربری موجود نیست')
+        }
       } else {
-        alert('نام کاربری یا رمز عبور اشتباه است.')
+        localStorage.setItem('user',JSON.stringify(user.userId))
+        window.location.href = '/admin'
       }
     } catch (error) {
-      console.error('Error during login:', error)
+      setError('خطای شبکه. لطفاً دوباره تلاش کنید.')
     }
   }
 
   return (
-    <div>
-      <h2>ورود</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>نام کاربری</label>
-          <input
-            type='text'
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>رمز عبور</label>
-          <input
-            type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type='submit'>ورود</button>
-      </form>
-    </div>
+    <div className={styles.container}>
+    <h2>ورود</h2>
+    <input
+      className={styles.input}
+      value={username}
+      onChange={e => setUsername(e.target.value)}
+      placeholder="Username"
+    />
+    <input
+      className={styles.input}
+      value={password}
+      onChange={e => setPassword(e.target.value)}
+      type="password"
+      placeholder="Password"
+    />
+    <button className={styles.button} onClick={handleLogin}>
+     ورود
+    </button>
+    {error && <p className={styles.error}>{error}</p>}
+  </div>
   )
 }
 

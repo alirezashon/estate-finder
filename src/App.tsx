@@ -1,23 +1,47 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import PostAd from './components/Ads'
-const App: React.FC = () => {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<div >testome</div>} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/postad" element={<PostAd />} />
-                {/* <Route path="/ad/:id" element={<AdDetail />} /> */}
+import React, { useState, useContext } from 'react'
+import { AdsContext } from './context/AdsContext'
+import styles from './components/Ads/List/list.module.css'
+import Gallery from './components/Gallery'
+import { Ad } from './interfaces'
+import ShowAddress from './components/Map/Show'
 
-            </Routes>
-        </Router>
-    );
-};
+const AdList: React.FC = () => {
+  const { ads, deleteAd } = useContext(AdsContext)!
+  const [edit, setEdite] = useState<Ad | null>(null)
+  const [loading, setLoading] = useState(true)
 
-export default App;
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 2000)
 
-  
+    return () => clearTimeout(timer)
+  }, [])
+
+  return (
+    <div className={styles.adsContainer}>
+      {loading
+        ? Array.from({ length: 7 }).map((_, index) => (
+            <div key={index} className={styles.loadingPlaceholder}></div>
+          ))
+        : ads?.map((ad) => (
+            <div key={ad.id} className={styles.card}>
+              <h4>{ad.address}</h4>
+              {ad.images && (
+                <Gallery
+                  structure={ad.images?.map((img, index) => ({
+                    src: img,
+                    alt: ad.description + index,
+                  }))}
+                />
+              )}
+              <p>{ad.description}</p>
+              <p>{ad.phone}</p>
+              <ShowAddress coord={[ad.location.lat, ad.location.lng]} />
+            </div>
+          ))}
+    </div>
+  )
+}
+
+export default AdList

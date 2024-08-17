@@ -9,17 +9,16 @@ import ShowAddress from '../../Map/Show'
 const AdList: React.FC = () => {
   const { ads, deleteAd } = useContext(AdsContext)!
   const [edit, setEdite] = useState<Ad | null>(null)
-  const [loading, setLoading] = useState(true) // Add loading state
+  const [loading, setLoading] = useState(true) 
 
   const onClose = () => {
     setEdite(null)
   }
 
-  // Simulate loading state
   React.useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false)
-    }, 2000) // Simulate a 2-second loading period
+    }, 2000) 
 
     return () => clearTimeout(timer)
   }, [])
@@ -31,7 +30,7 @@ const AdList: React.FC = () => {
           <div key={index} className={styles.loadingPlaceholder}></div>
         ))
       ) : (
-        ads.map((ad) => (
+        ads?.map((ad) => (
           <div key={ad.id} className={styles.card}>
             <h4>{ad.address}</h4>
             {ad.images && (
@@ -45,8 +44,8 @@ const AdList: React.FC = () => {
             <p>{ad.description}</p>
             <p>{ad.phone}</p>
             <ShowAddress coord={[ad.location.lat, ad.location.lng]} />
-            <button className={styles.deleteButton} onClick={() => deleteAd(ad.id)}>Delete</button>
-            <button className={styles.editButton} onClick={() => setEdite(ad)}>Edit</button>
+            <button className={styles.deleteButton} onClick={() => deleteAd(ad.id)}>حذف</button>
+            <button className={styles.editButton} onClick={() => setEdite(ad)}>ویرایش</button>
           </div>
         ))
       )}

@@ -41,6 +41,7 @@
 }
 
 .card button {
+  margin: 1vh;
   padding: 10px 15px;
   border: none;
   border-radius: 5px;

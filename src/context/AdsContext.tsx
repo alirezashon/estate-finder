@@ -7,18 +7,28 @@ export const AdsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [ads, setAds] = useState<Ad[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('http://localhost:5000/ads')
-      .then((res) => res.json())
-      .then((data) => setAds(data))
+    const storedUserId = localStorage.getItem('user')
+    if (storedUserId) {
+      setUserId(storedUserId)
+      fetch('http://localhost:5000/ads')
+        .then((res) => res.json())
+        .then((data) => {
+          const userAds = data.filter((d: Ad) => d.userId === storedUserId)
+          userAds.length>0 ? setAds(userAds) : setAds(data)
+        })
+    } else {
+      window.location.href = '/login'
+    }
   }, [])
 
   const addAd = (ad: Omit<Ad, 'id' | 'userId'>) => {
     const newAd: Ad = {
       ...ad,
       id: Date.now(),
-      userId: 1,
+      userId: `${userId}`,
     }
 
     fetch('http://localhost:5000/ads', {

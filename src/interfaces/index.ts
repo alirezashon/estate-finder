@@ -1,6 +1,6 @@
 export interface Ad {
   id: number
-  userId: number
+  userId: string
   location: {
     lat: number
     lng: number

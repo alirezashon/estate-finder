@@ -1,56 +1,67 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import styles from './register.module.css'
 
-const Register: React.FC = () => {
+const generateUserId = () => {
+  return Math.random().toString(36).substr(2, 9)
+}
+
+const Register = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
+  const [error, setError] = useState<string | null>(null)
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-
+  const handleRegister = async () => {
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      const response = await fetch('http://localhost:5000/users')
+      const users = await response.json()
+
+      if (users.some((user: any) => user.username === username)) {
+        setError('نام کاربری قبلاً ثبت شده است')
+        return
+      }
+
+      const newUser = {
+        userId: generateUserId(),
+        username,
+        password,
+      }
+
+      const postResponse = await fetch('http://localhost:5000/users', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser),
       })
 
-      if (response.ok) {
-        alert('ثبت‌نام با موفقیت انجام شد.')
-        navigate('/login')
-      } else {
-        alert('خطایی رخ داد. لطفاً دوباره تلاش کنید.')
+      if (!postResponse.ok) {
+        throw new Error('Error registering user')
       }
-    } catch (error) {
-      console.error('Error during registration:', error)
+
+      window.location.href = '/login'
+    } catch (err) {
+      setError('خطا در ثبت نام')
     }
   }
 
   return (
-    <div>
-      <h2>ثبت‌نام</h2>
-      <form onSubmit={handleRegister}>
-        <div>
-          <label>نام کاربری</label>
-          <input
-            type='text'
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>رمز عبور</label>
-          <input
-            type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button type='submit'>ثبت‌نام</button>
-      </form>
+    <div className={styles.container}>
+      <h2>ثبت نام</h2>
+      <input
+        className={styles.input}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder='Username'
+      />
+      <input
+        className={styles.input}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        type='password'
+        placeholder='Password'
+      />
+      <button className={styles.button} onClick={handleRegister}>
+        ثبت نام{' '}
+      </button>
+      {error && <p className={styles.error}>{error}</p>}
     </div>
   )
 }

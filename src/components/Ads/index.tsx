@@ -7,7 +7,6 @@ const App: React.FC = () => {
   return (
     <AdsProvider>
       <div>
-        <h1>Real Estate Listings</h1>
         <AddAdForm />
         <AdList />
       </div>
